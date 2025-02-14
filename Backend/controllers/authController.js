@@ -5,7 +5,7 @@ import User from "../models/User.js";
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        console.log(email,password)
+    
         // Find user in the database
         const user = await User.findOne({ email });
         if (!user) {
@@ -34,7 +34,7 @@ const login = async (req, res) => {
 
     } catch (error) {
         console.error("Login Error:", error.message);
-//        res.status(500).json({ message: "Internal Server Error" });
+       res.status(500).json({success: false, error: error.message });
     }
 };
 

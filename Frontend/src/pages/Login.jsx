@@ -6,28 +6,27 @@ import "./Login.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
     const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("ok")
     try {
-      const response = await axios.post("http://localhost:5173/api/auth/login", {
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
         email,
         password,
       });
   
-      // if (response.data.success) {
-      //   localStorage.setItem("token", response.data.token);
-      //   alert("Login successful!");
-      //   navigate("/admin-dashboard");
-      // } else {
-      //   alert(response.data.message);
-      // }
-      console.log(response)
+      if (response.data.success) {
+       localStorage.setItem("token", response.data.token);
+        alert("Login successful!");
+        navigate("/admin-dashboard");
+      } else {
+        alert(response.data.message);
+      }
     } catch (error) {
       console.error("Login failed:", error.response?.data || error);
-//       alert(error.response?.data?.message || "Login failed. Please check your credentials.");
+      alert(error.response?.data?.message || "Login failed. Please check your credentials.");
     }
   };
   
@@ -42,6 +41,7 @@ const Login = () => {
 
       <div className="bg-gray-900 text-white p-8 rounded-2xl shadow-2xl w-96 bg-opacity-90">
         <h2 className="text-center text-2xl font-bold mb-4">Login</h2>
+        {error && <p className="text-red-500">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-gray-300">Email</label>
