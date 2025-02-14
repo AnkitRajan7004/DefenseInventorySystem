@@ -1,0 +1,21 @@
+
+/* Rotating Logo at the Top Left Corner */
+.rotating-logo {
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  width: 100px;
+  height: 100px;
+  animation: earth-spin 5s linear infinite;
+  transform-style: preserve-3d;
+}
+
+/* Rotation Effect */
+@keyframes earth-spin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
