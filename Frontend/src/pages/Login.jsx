@@ -2,14 +2,18 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; 
 import "./Login.css";
+import { useAuth } from "../context/authContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const {login} = useAuth();
   const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
+  
     const handleSubmit = async (e) => {
+
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", {
@@ -18,21 +22,30 @@ const Login = () => {
       });
   
       if (response.data.success) {
+        login(response.data.user)
        localStorage.setItem("token", response.data.token);
+      if (response.data.user.role === "admin") {
         alert("Login successful!");
         navigate("/admin-dashboard");
-      } else {
-        alert(response.data.message);
       }
+      else{
+        alert("Login successful!");
+        navigate("/soldier-dashboard");
+      }
+    }
     } catch (error) {
+      if (error.response && error.response.data.success === false){
+        setError(error.response.data.error)
+      }else{
       console.error("Login failed:", error.response?.data || error);
       alert(error.response?.data?.message || "Login failed. Please check your credentials.");
-    }
+      }  
+  }
   };
   
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-400 relative">
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 relative">
       <img
         src="/Letter.png"
         alt="Defense Logo"
